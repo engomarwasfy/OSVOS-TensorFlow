@@ -30,11 +30,11 @@ train_model = False
 result_path = os.path.join('DAVIS', 'Results', 'Segmentations', '480p', 'OSVOS', seq_name)
 
 # Train parameters
-"""
+
 parent_path = os.path.join('models', 'OSVOS_parent', 'OSVOS_parent.ckpt-50000')
 logs_path = os.path.join('models', seq_name)
 max_training_iters = 500
-"""
+
 # Define Dataset
 test_frames = sorted(os.listdir(os.path.join('DAVIS', 'JPEGImages', '480p', seq_name)))
 test_imgs = [os.path.join('DAVIS', 'JPEGImages', '480p', seq_name, frame) for frame in test_frames]
@@ -59,11 +59,12 @@ if train_model:
                                  save_step, display_step, global_step, iter_mean_grad=1, ckpt_name=seq_name)
 
 # Test the network
+print("111111111111111111111111111111111111111111111111");
 with tf.Graph().as_default():
     with tf.device('/gpu:' + str(gpu_id)):
         checkpoint_path = os.path.join('models', seq_name, seq_name+'.ckpt-'+str(max_training_iters))
         osvos.test(dataset, checkpoint_path, result_path)
-
+print("22222222222222222222222222222222222222222222222222222222222222222222222222222222");
 # Show results
 overlay_color = [255, 0, 0]
 transparency = 0.6
