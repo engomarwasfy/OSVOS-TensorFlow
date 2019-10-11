@@ -25,8 +25,8 @@ os.chdir(root_folder)
 # User defined parameters
 seq_name = "car-shadow"
 gpu_id = 0
-#train_model = True
-train_model = False
+train_model = True
+#train_model = False
 result_path = os.path.join('DAVIS', 'Results', 'Segmentations', '480p', 'OSVOS', seq_name)
 
 # Train parameters
