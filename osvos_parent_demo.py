@@ -23,7 +23,7 @@ gpu_id = 0
 # Training parameters
 imagenet_ckpt = 'models/vgg_16.ckpt'
 #logs_path = os.path.join(root_folder, 'models', 'OSVOS_parent')
-drive/My Drive/All/omarwasfy/Master/Deep learning applications on image and video segmentation /check_points
+#drive/My Drive/All/omarwasfy/Master/Deep learning applications on image and video segmentation /check_points
 logs_path = os.path.join(root_folder, 'drive', 'My\Drive','All','omarwasfy','Master','Deep\learning\applications\on\image\and\video\segmentation\','check_points')
 store_memory = True
 data_aug = True
