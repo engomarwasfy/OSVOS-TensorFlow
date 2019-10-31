@@ -23,6 +23,7 @@ from dataset import Dataset
 os.chdir(root_folder)
 
 # User defined parameters
+'''
 seq_names = ["bear","dance-jump","horsejump-low",
 "rhino","blackswan","dance-twirl", "kite-surf"	,"rollerblade","bmx-bumps","dog",
 "kite-walk","scooter-black","bmx-trees","dog-agility","libby","scooter-gray",
@@ -34,6 +35,41 @@ seq_names = ["bear","dance-jump","horsejump-low",
 "car-shadow","hike","paragliding","train",
 "car-turn","hockey","paragliding-launch",
 "cows","horsejump-high","parkour"]
+'''
+
+seq_names = ["aerobatics","dog-agility","lab-coat","rollercoaster",
+"bear","dog-gooses","lady-running","salsa",
+"bike-packing","dogs-jump","libby","schoolgirls",
+"blackswan","dogs-scale","lindy-hop","scooter-black",
+"bmx-bumps","drift-chicane","loading","scooter-board",
+"bmx-trees","drift-straight","lock","scooter-gray",
+"boat","drift-turn","longboard","seasnake",
+"boxing-fisheye","drone","lucia","sheep",
+"breakdance","elephant","mallard-fly","shooting",
+"breakdance-flare","flamingo","mallard-water","skate-jump",
+"bus","giant-slalom","man-bike","skate-park",
+"camel","girl-dog","mbike-trick","slackline",
+"carousel","goat","miami-surf","snowboard",
+"car-race","gold-fish","monkeys-trees","soapbox",
+"car-roundabout","golf","motocross-bumps","soccerball",
+"car-shadow","guitar-violin","motocross-jump","stroller",
+"car-turn","gym","motorbike","stunt",
+"cat-girl","helicopter","mtb-race","subway",
+"cats-car","hike","night-race","surf",
+"chamaleon"	 , "hockey"	,   "orchid"	  ,"swing",
+"classic-car"	,"horsejump-high" ,"paragliding","tandem",
+"color-run",	  "horsejump-low", "paragliding-launch",  "tennis",
+"cows","horsejump-stick","parkour","tennis-vest",
+"crossing","hoverboard"	,"people-sunset","tractor",
+"dance-jump"	,"india" ,"pigs"		,       "tractor-sand",
+"dance-twirl","judo","planes-crossing" ,"train",
+"dancing","kid-football","planes-water","tuk-tuk",
+"deer","kite-surf","rallye","upside-down",
+"disc-jockey","kite-walk"	,"rhino","varanus-cage",
+"dog","koala","rollerblade","walking"]
+
+
+
 length = len(seq_names)
 gpu_id = 0
 train_model = True
