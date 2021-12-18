@@ -134,10 +134,7 @@ def osvos(inputs, scope='osvos'):
 
 def upsample_filt(size):
     factor = (size + 1) // 2
-    if size % 2 == 1:
-        center = factor - 1
-    else:
-        center = factor - 0.5
+    center = factor - 1 if size % 2 == 1 else factor - 0.5
     og = np.ogrid[:size, :size]
     return (1 - abs(og[0] - center) / factor) * \
            (1 - abs(og[1] - center) / factor)
@@ -207,14 +204,15 @@ def load_vgg_imagenet(ckpt_path):
     """
     reader = tf.train.NewCheckpointReader(ckpt_path)
     var_to_shape_map = reader.get_variable_to_shape_map()
-    vars_corresp = dict()
-    for v in var_to_shape_map:
-        if "conv" in v:
-            vars_corresp[v] = slim.get_model_variables(v.replace("vgg_16", "osvos"))[0]
-    init_fn = slim.assign_from_checkpoint_fn(
+    vars_corresp = {
+        v: slim.get_model_variables(v.replace("vgg_16", "osvos"))[0]
+        for v in var_to_shape_map
+        if "conv" in v
+    }
+
+    return slim.assign_from_checkpoint_fn(
         ckpt_path,
         vars_corresp)
-    return init_fn
 
 
 def class_balanced_cross_entropy_loss(output, label):
@@ -239,9 +237,10 @@ def class_balanced_cross_entropy_loss(output, label):
     loss_pos = tf.reduce_sum(-tf.multiply(labels, loss_val))
     loss_neg = tf.reduce_sum(-tf.multiply(1.0 - labels, loss_val))
 
-    final_loss = num_labels_neg / num_total * loss_pos + num_labels_pos / num_total * loss_neg
-
-    return final_loss
+    return (
+        num_labels_neg / num_total * loss_pos
+        + num_labels_pos / num_total * loss_neg
+    )
 
 
 def class_balanced_cross_entropy_loss_theoretical(output, label):
@@ -264,9 +263,10 @@ def class_balanced_cross_entropy_loss_theoretical(output, label):
     loss_pos = tf.reduce_sum(tf.multiply(labels_pos, tf.log(output + 0.00001)))
     loss_neg = tf.reduce_sum(tf.multiply(labels_neg, tf.log(1 - output + 0.00001)))
 
-    final_loss = -num_labels_neg / num_total * loss_pos - num_labels_pos / num_total * loss_neg
-
-    return final_loss
+    return (
+        -num_labels_neg / num_total * loss_pos
+        - num_labels_pos / num_total * loss_neg
+    )
 
 
 def load_caffe_weights(weights_path):
@@ -277,22 +277,22 @@ def load_caffe_weights(weights_path):
     Function that takes a session and initializes the network
     """
     osvos_weights = np.load(weights_path).item()
-    vars_corresp = dict()
-    vars_corresp['osvos/conv1/conv1_1/weights'] = osvos_weights['conv1_1_w']
-    vars_corresp['osvos/conv1/conv1_1/biases'] = osvos_weights['conv1_1_b']
-    vars_corresp['osvos/conv1/conv1_2/weights'] = osvos_weights['conv1_2_w']
-    vars_corresp['osvos/conv1/conv1_2/biases'] = osvos_weights['conv1_2_b']
+    vars_corresp = {
+        'osvos/conv1/conv1_1/weights': osvos_weights['conv1_1_w'],
+        'osvos/conv1/conv1_1/biases': osvos_weights['conv1_1_b'],
+        'osvos/conv1/conv1_2/weights': osvos_weights['conv1_2_w'],
+        'osvos/conv1/conv1_2/biases': osvos_weights['conv1_2_b'],
+        'osvos/conv2/conv2_1/weights': osvos_weights['conv2_1_w'],
+        'osvos/conv2/conv2_1/biases': osvos_weights['conv2_1_b'],
+        'osvos/conv2/conv2_2/weights': osvos_weights['conv2_2_w'],
+        'osvos/conv2/conv2_2/biases': osvos_weights['conv2_2_b'],
+        'osvos/conv3/conv3_1/weights': osvos_weights['conv3_1_w'],
+        'osvos/conv3/conv3_1/biases': osvos_weights['conv3_1_b'],
+        'osvos/conv3/conv3_2/weights': osvos_weights['conv3_2_w'],
+        'osvos/conv3/conv3_2/biases': osvos_weights['conv3_2_b'],
+        'osvos/conv3/conv3_3/weights': osvos_weights['conv3_3_w'],
+    }
 
-    vars_corresp['osvos/conv2/conv2_1/weights'] = osvos_weights['conv2_1_w']
-    vars_corresp['osvos/conv2/conv2_1/biases'] = osvos_weights['conv2_1_b']
-    vars_corresp['osvos/conv2/conv2_2/weights'] = osvos_weights['conv2_2_w']
-    vars_corresp['osvos/conv2/conv2_2/biases'] = osvos_weights['conv2_2_b']
-
-    vars_corresp['osvos/conv3/conv3_1/weights'] = osvos_weights['conv3_1_w']
-    vars_corresp['osvos/conv3/conv3_1/biases'] = osvos_weights['conv3_1_b']
-    vars_corresp['osvos/conv3/conv3_2/weights'] = osvos_weights['conv3_2_w']
-    vars_corresp['osvos/conv3/conv3_2/biases'] = osvos_weights['conv3_2_b']
-    vars_corresp['osvos/conv3/conv3_3/weights'] = osvos_weights['conv3_3_w']
     vars_corresp['osvos/conv3/conv3_3/biases'] = osvos_weights['conv3_3_b']
 
     vars_corresp['osvos/conv4/conv4_1/weights'] = osvos_weights['conv4_1_w']
